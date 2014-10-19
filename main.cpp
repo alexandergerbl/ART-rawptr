@@ -196,6 +196,8 @@ void addChild(BaseNode*& parent, uint8_t byte, BaseNode* child)
 /// grows to one step bigger node e.g. Node4 -> Node16
 void grow(InnerNode*& node)
 {
+cout << "GROW ! ! ! " << endl;
+cout << "Type = " << (int)node->type << endl;
 	if(node->type == Nodetype::Node4)
 	{
 		Node4* tmp_node = static_cast<Node4*>(node);
@@ -207,6 +209,8 @@ void grow(InnerNode*& node)
 		//move content
 		move(tmp_node->keys.begin(), tmp_node->keys.end(), newNode->keys.begin());
 		move(tmp_node->child.begin(), tmp_node->child.end(), newNode->child.begin());
+for_each(newNode->keys.begin(), newNode->keys.end(), [](uint8_t key){cout << (int) key << endl;});
+for_each(newNode->child.begin(), newNode->child.end(), [](BaseNode* ptr){cout << ptr << endl;});
 		node = newNode;
 		return; 
 	}
@@ -318,12 +322,15 @@ void insert(BaseNode*& node, const Key& key, SVLeaf* leaf, int depth)
 	depth+=inner_node->prefixLen;
 	//next must be by reference ! ! !
 	BaseNode** next = findChild(inner_node, key[depth]);
+	if(next == nullptr)
+		goto hier;
 	if((*next) != nullptr)
 	{
 	    insert(*next, key, leaf, depth+1);
 	}
 	else
 	{
+hier:
 	    if(inner_node->isFull())
 	      grow(inner_node);
 	    addChild(node, key[depth], leaf);
@@ -339,44 +346,33 @@ int main()
 	Key k2 { 0x00, 0x01, 0x03, 0x03, 0x04, 0x05, 0x06, 0x07 };
 	Key k3 { 0x00, 0x02, 0x02, 0x04, 0x04, 0x05, 0x06, 0x07 };
 	Key k4 { 0x00, 0x01, 0x02, 0x03, 0x04, 0x06, 0x06, 0x07 };
+	Key k5 { 0x00, 0x01, 0x04, 0x05, 0x06, 0x00, 0x03, 0xff };
+	Key k6 { 0x00, 0x01, 0x05, 0x05, 0x06, 0x00, 0x03, 0xff };
+	Key k7 { 0x00, 0x01, 0x06, 0x05, 0x06, 0x00, 0x03, 0xff };
 
-
-	SVLeaf* leaf = new SVLeaf(k, "leaf");
-	cout <<"leaf = " << leaf << endl;
-	
+	SVLeaf* leaf = new SVLeaf(k, "leaf");	
 	SVLeaf* leaf2 = new SVLeaf(k2, "leaf2");
-	cout <<"leaf2 = " << leaf2 << endl;
 	SVLeaf* leaf3 = new SVLeaf(k3, "leaf3");
-	cout <<"leaf3 = " << leaf3 << endl;
 	SVLeaf* leaf4 = new SVLeaf(k4, "leaf4");
-	cout <<"leaf4 = " << leaf4 << "\n"<< endl;
-
-/*	addChild(root, 0x01, leaf);
-	addChild(root, 0x02, leaf2);
-	addChild(root, 0x03, leaf3);
-
-	SVLeaf** blatt = reinterpret_cast<SVLeaf**>(findChild(root, 0x01));
-
-	cout << "Leaf = " << ((*blatt)->value) << endl;	
-
-	*blatt = leaf3;
-
-	cout << "change leaf*" <<endl;
-	SVLeaf** blatt2 = reinterpret_cast<SVLeaf**>(findChild(root, 0x01));
-	cout << "Leaf = " << ((*blatt2)->value) << endl;	
-*/
-	
+	SVLeaf* leaf5 = new SVLeaf(k5, "leaf5");
+	SVLeaf* leaf6 = new SVLeaf(k6, "leaf6");
+	SVLeaf* leaf7 = new SVLeaf(k7, "leaf7");
 
 	insert(root, k, leaf, 0);
 	insert(root, k2, leaf2, 0);
 	insert(root, k3, leaf3, 0);
+	insert(root, k4, leaf4, 0);
+	insert(root, k5, leaf5, 0);
+	insert(root, k6, leaf6, 0);
+	insert(root, k7, leaf7, 0);
 
 	cout << "Leaf = " << static_cast<SVLeaf*>(search(root, k, 0))->value << endl;
 	cout << "Leaf2 = " << static_cast<SVLeaf*>(search(root, k2, 0))->value << endl;
 	cout << "Leaf3 = " << static_cast<SVLeaf*>(search(root, k3, 0))->value << endl;
-
-	insert(root, k4, leaf4, 0);
 	cout << "Leaf4 = " << static_cast<SVLeaf*>(search(root, k4, 0))->value << endl;
+	cout << "Leaf5 = " << static_cast<SVLeaf*>(search(root, k5, 0))->value << endl;
+	cout << "Leaf6 = " << static_cast<SVLeaf*>(search(root, k6, 0))->value << endl;
+	cout << "Leaf7 = " << static_cast<SVLeaf*>(search(root, k7, 0))->value << endl;
 /*
 cout <<"Root - node4" << endl;
 	Node4* root_Node4 = static_cast<Node4*>(root);
