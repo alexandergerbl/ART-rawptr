@@ -7,13 +7,14 @@
 #include<functional>
 #include<string>
 #include<utility>
+#include<sstream>
 
 using namespace std;
 
 typedef uint8_t Key [8];
-typedef string Value;
+typedef string* Value;
 
-const int numData = 10000;
+const int numData = 100000;
 const uint8_t EMPTY(50);
 
 enum class Nodetype : uint8_t { SVLeaf = 1, Node4 = 4, Node16 = 16, Node48 = 48, Node256 = 56 };
@@ -352,19 +353,33 @@ int main()
 	uint8_t tmp_key[8];
 	string tmp_value;
 	SVLeaf* tmp_leaf;
+	stringstream ss;
 	for(uint64_t i = 0; i < numData; i++)
 	{
 		convert.key64 = i;
 		copy(convert.key8, convert.key8 + 8, tmp_key);
-		tmp_value = "leaf"+i;
-		tmp_leaf = new SVLeaf(tmp_key, tmp_value);
+		ss << "leaf" << i;
+		tmp_value = ss.str();
+		tmp_leaf = new SVLeaf(tmp_key, new string(tmp_value));
 		insert(root, tmp_key, tmp_leaf, 0);
-
+		ss.str("");
+		ss.clear();
 	}
-	Key k { 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	
 	cout << "Insert finished!" << endl;
-cout << "root.type = " << (int)root->type << endl;
-	cout << "Leaf = " << static_cast<SVLeaf*>(search(root, k, 0))->value << endl; 
+
+
+for(uint64_t i = 0; i < numData; i++)
+{
+	convert.key64 = i;
+	Key k;
+	copy(convert.key8, convert.key8+8, k);
+
+	cout << "Leaf" << convert.key64 << " = " << (*((static_cast<SVLeaf*>(search(root, k, 0)))->value)) << endl; 
+}
+//cout << "root.type = " << (int)root->type << endl;
+//Node256* root2 = reinterpret_cast<Node256*>(root);
+//for_each(root2->child.begin(), root2->child.end(), [](BaseNode* ptr){ cout << ptr << endl; });
 /*
 	cout <<"root = " << root << "\n"<< endl;
 
