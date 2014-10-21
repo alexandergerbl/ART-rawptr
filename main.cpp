@@ -353,7 +353,17 @@ int main()
 	Key k7 { 0x00, 0x01, 0x06, 0x05, 0x06, 0x00, 0x03, 0xff };
 	Key k8 { 0x01, 0x01, 0x06, 0x05, 0x06, 0x00, 0x03, 0xff };
 	Key k9 { 0x00, 0x01, 0x01, 0x05, 0x06, 0x00, 0x03, 0xff };
-	Key k10 { 0x00, 0x01, 0x06, 0x05, 0x06, 0x09, 0x03, 0xff };
+	Key k10 { 0x10, 0x01, 0x06, 0x05, 0x06, 0x09, 0x03, 0xff };
+	Key k11 { 0x06, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
+	Key k12 { 0x00, 0x03, 0x03, 0x03, 0x04, 0x05, 0x06, 0x07 };
+	Key k13 { 0x03, 0x02, 0x02, 0x04, 0x04, 0x05, 0x06, 0x07 };
+	Key k14 { 0x00, 0x01, 0x02, 0x03, 0x04, 0x06, 0x06, 0x0f };
+	Key k15 { 0x01, 0x01, 0x04, 0x05, 0x06, 0x00, 0x03, 0xff };
+	Key k16 { 0x00, 0x02, 0x05, 0x05, 0x05, 0x00, 0x03, 0xff };
+	Key k17 { 0x00, 0x01, 0x06, 0x05, 0x09, 0x00, 0x03, 0xff };
+	Key k18 { 0x01, 0x02, 0x06, 0x05, 0x06, 0x00, 0x03, 0xff };
+	Key k19 { 0x00, 0x01, 0x01, 0x05, 0x0f, 0x00, 0x03, 0xff };
+	Key k20 { 0x09, 0x01, 0x06, 0x05, 0x06, 0x09, 0x03, 0xff };
 
 	SVLeaf* leaf = new SVLeaf(k, "leaf");	
 	SVLeaf* leaf2 = new SVLeaf(k2, "leaf2");
@@ -365,6 +375,16 @@ int main()
 	SVLeaf* leaf8 = new SVLeaf(k8, "leaf8");
 	SVLeaf* leaf9 = new SVLeaf(k9, "leaf9");
 	SVLeaf* leaf10 = new SVLeaf(k10, "leaf10");
+	SVLeaf* leaf11 = new SVLeaf(k11, "leaf11");	
+	SVLeaf* leaf12 = new SVLeaf(k12, "leaf12");
+	SVLeaf* leaf13 = new SVLeaf(k13, "leaf13");
+	SVLeaf* leaf14 = new SVLeaf(k14, "leaf14");
+	SVLeaf* leaf15 = new SVLeaf(k15, "leaf15");
+	SVLeaf* leaf16 = new SVLeaf(k16, "leaf16");
+	SVLeaf* leaf17 = new SVLeaf(k17, "leaf17");
+	SVLeaf* leaf18 = new SVLeaf(k18, "leaf18");
+	SVLeaf* leaf19 = new SVLeaf(k19, "leaf19");
+	SVLeaf* leaf20 = new SVLeaf(k20, "leaf20");
 
 	insert(root, k, leaf, 0);
 	insert(root, k2, leaf2, 0);
@@ -376,7 +396,19 @@ int main()
 	insert(root, k8, leaf8, 0);
 	insert(root, k9, leaf9, 0);
 	insert(root, k10, leaf10, 0);
-
+	insert(root, k11, leaf11, 0);
+	insert(root, k12, leaf12, 0);
+	insert(root, k13, leaf13, 0);
+	insert(root, k14, leaf14, 0);
+	insert(root, k15, leaf15, 0);
+	insert(root, k16, leaf16, 0);
+	insert(root, k17, leaf17, 0);
+	insert(root, k18, leaf18, 0);
+	insert(root, k19, leaf19, 0);
+	insert(root, k20, leaf20, 0);
+cout << "root.type = " << (int)root->type << endl;
+Node16* a = reinterpret_cast<Node16*>(root);
+for_each(a->keys.begin(), a->keys.end(), [](uint8_t key){ cout << (int)key << endl; });
 	cout << "Leaf = " << static_cast<SVLeaf*>(search(root, k, 0))->value << endl;
 	cout << "Leaf2 = " << static_cast<SVLeaf*>(search(root, k2, 0))->value << endl;
 	cout << "Leaf3 = " << static_cast<SVLeaf*>(search(root, k3, 0))->value << endl;
@@ -387,6 +419,16 @@ int main()
 	cout << "Leaf8 = " << static_cast<SVLeaf*>(search(root, k8, 0))->value << endl;
 	cout << "Leaf9 = " << static_cast<SVLeaf*>(search(root, k9, 0))->value << endl;
 	cout << "Leaf10 = " << static_cast<SVLeaf*>(search(root, k10, 0))->value << endl;
+	cout << "Leaf11 = " << static_cast<SVLeaf*>(search(root, k11, 0))->value << endl;
+	cout << "Leaf12 = " << static_cast<SVLeaf*>(search(root, k12, 0))->value << endl;
+	cout << "Leaf13 = " << static_cast<SVLeaf*>(search(root, k13, 0))->value << endl;
+	cout << "Leaf14 = " << static_cast<SVLeaf*>(search(root, k14, 0))->value << endl;
+	cout << "Leaf15 = " << static_cast<SVLeaf*>(search(root, k15, 0))->value << endl;
+	cout << "Leaf16 = " << static_cast<SVLeaf*>(search(root, k16, 0))->value << endl;
+	cout << "Leaf17 = " << static_cast<SVLeaf*>(search(root, k17, 0))->value << endl;
+	cout << "Leaf18 = " << static_cast<SVLeaf*>(search(root, k18, 0))->value << endl;
+	cout << "Leaf19 = " << static_cast<SVLeaf*>(search(root, k19, 0))->value << endl;
+	cout << "Leaf20 = " << static_cast<SVLeaf*>(search(root, k20, 0))->value << endl;
 /*
 cout <<"Root - node4" << endl;
 	Node4* root_Node4 = static_cast<Node4*>(root);
