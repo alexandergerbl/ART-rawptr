@@ -13,9 +13,10 @@ using namespace std;
 typedef uint8_t Key [8];
 typedef string Value;
 
+const int numData = 10000;
 const uint8_t EMPTY(50);
 
-enum class Nodetype : uint8_t { SVLeaf = 1, Node4 = 4, Node16 = 16, Node48 = 48, Node256 = 5 };
+enum class Nodetype : uint8_t { SVLeaf = 1, Node4 = 4, Node16 = 16, Node48 = 48, Node256 = 56 };
 
 struct BaseNode
 {
@@ -337,10 +338,34 @@ hier:
 			addChild(node, key[depth], leaf);
 	}
 }
+union t_convert
+{
+	uint64_t key64;
+	uint8_t key8 [8];
+};
 
 int main()
 {
 	BaseNode* root = nullptr;
+
+	t_convert convert;
+	uint8_t tmp_key[8];
+	string tmp_value;
+	SVLeaf* tmp_leaf;
+	for(uint64_t i = 0; i < numData; i++)
+	{
+		convert.key64 = i;
+		copy(convert.key8, convert.key8 + 8, tmp_key);
+		tmp_value = "leaf"+i;
+		tmp_leaf = new SVLeaf(tmp_key, tmp_value);
+		insert(root, tmp_key, tmp_leaf, 0);
+
+	}
+	Key k { 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	cout << "Insert finished!" << endl;
+cout << "root.type = " << (int)root->type << endl;
+	cout << "Leaf = " << static_cast<SVLeaf*>(search(root, k, 0))->value << endl; 
+/*
 	cout <<"root = " << root << "\n"<< endl;
 
 
@@ -429,25 +454,6 @@ for_each(a->keys.begin(), a->keys.end(), [](uint8_t key){ cout << (int)key << en
 	cout << "Leaf18 = " << static_cast<SVLeaf*>(search(root, k18, 0))->value << endl;
 	cout << "Leaf19 = " << static_cast<SVLeaf*>(search(root, k19, 0))->value << endl;
 	cout << "Leaf20 = " << static_cast<SVLeaf*>(search(root, k20, 0))->value << endl;
-/*
-cout <<"Root - node4" << endl;
-	Node4* root_Node4 = static_cast<Node4*>(root);
-	for_each(root_Node4->keys.begin(), root_Node4->keys.end(), [](uint8_t key){ cout << (int)key << endl; });
-	for_each(root_Node4->child.begin(), root_Node4->child.end(), [](BaseNode* ptr){ cout << ptr << endl; });
-cout <<"root.child[0] - node4" << endl;
-	Node4* child0_Node4 = static_cast<Node4*>(root_Node4->child[0]);
-	for_each(child0_Node4->keys.begin(), child0_Node4->keys.end(), [](uint8_t key){ cout << (int)key << endl; });
-	for_each(child0_Node4->child.begin(), child0_Node4->child.end(), [](BaseNode* ptr){ cout << ptr << endl; });
-cout <<"root.child[0].child[0]" << endl;
-	Node4* child00_Node4 = static_cast<Node4*>(child0_Node4->child[0]);
-	//cout << "PrefixLen = " << (int)child00_Node4->prefixLen << endl;
-//	for(int i = 0; i < (int)child00_Node4->prefixLen;i++)
-//		cout << "Prefix["<<i<<"] = " << (int)child00_Node4->prefix[i] << endl;
-	for_each(child00_Node4->keys.begin(), child00_Node4->keys.end(), [](uint8_t key){ cout << (int)key << endl; });
-	for_each(child00_Node4->child.begin(), child00_Node4->child.end(), [](BaseNode* ptr){ cout << ptr << endl; });
-*/	
-	//auto root_Node48 = static_pointer_cast<SVLeaf>(root);
-	//for_each(root_Node48->child.begin(), root_Node48->child.end(), [](shared_ptr<BaseNode> ptr){ cout << ptr << endl; });
-
+*/
 	return 0;
 }
